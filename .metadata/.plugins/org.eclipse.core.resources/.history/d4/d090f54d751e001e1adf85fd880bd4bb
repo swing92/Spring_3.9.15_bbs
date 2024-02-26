@@ -1,0 +1,534 @@
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.sql.Time"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+<link rel="stylesheet" type="text/css" href="resources/css/monthCal.css">
+<style>
+.Calendar {
+	border: 1px solid black;
+}
+</style>
+
+	<div class="row">
+			<div id="selectedDate" class="col text-center mt-5 fs-5 fw-bold">${location.locationName }</div>
+		</div>
+<div class="row">
+	<div class="col-2"></div>
+	<div class="col">
+		<table class="Calendar mt-5">
+			<thead>
+				<tr>
+					<td onClick="prevCalendar();" style="cursor: pointer;">&#60;</td>
+					<td colspan="5"><span id="calYear"></span>년 <span
+						id="calMonth"></span>월</td>
+					<td onClick="nextCalendar();" style="cursor: pointer;">&#62;</td>
+				</tr>
+				<tr>
+					<td>일</td>
+					<td>월</td>
+					<td>화</td>
+					<td>수</td>
+					<td>목</td>
+					<td>금</td>
+					<td>토</td>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+		<!-- 달력에  -->
+		<div class="row">
+			<div id="selectedDate" class="col text-center mt-5 fs-5 fw-bold">${reqDate}</div>
+		</div>
+			
+		<form id="reservationChk" name="reservationChk"
+			action="reservationChkProcess" method="post">
+			<input type="hidden" name="locationNo" value="${locationNo}">
+			<input type="hidden" name="reservationDate" id="reservationDate" value="${reservationDate}">
+			<input type="hidden" name="reservationTime" id="reservationTime">
+						<input type="hidden" name="donationTypeNo" id="donationTypeNo">
+						
+			<!-- 캘린더 날짜 클릭하면 시간 나옴 -->
+			<div id="s-eTime" class="d-flex justify-content-center mt-3">
+				<table id="reservationTable">
+					<c:forEach var="i" begin="0" end="5">	
+						<c:if test="${i % 2 ==0}"><%-- 짝수행 --%>
+						<tr class="bg-danger bg-opacity-10 border-danger border-top border-bottom text-center fw-bold">
+							<c:forEach var="j" begin="0" end="7">						
+								<c:if test="${j == 0}"><%-- 첫 번째 열 --%>												
+								<td class="text-primary">
+									시간
+								</td>
+								</c:if>
+								<c:if test="${j != 0}">
+									<c:choose>
+									<c:when test="${i == 0}">					
+									<td>
+										<c:choose>
+											<c:when test="${j == 1}">09:00</c:when>
+											<c:when test="${j == 2}">09:30</c:when>
+											<c:when test="${j == 3}">10:00</c:when>
+											<c:when test="${j == 4}">10:30</c:when>
+											<c:when test="${j == 5}">11:00</c:when>
+											<c:when test="${j == 6}">11:30</c:when>
+											<c:when test="${j == 7}">12:00</c:when>
+										</c:choose>
+									</td>
+									</c:when>
+									<c:when test="${i == 2}">					
+									<td>
+										<c:choose>
+											<c:when test="${j == 1}">12:30</c:when>
+											<c:when test="${j == 2}">13:00</c:when>
+											<c:when test="${j == 3}">13:30</c:when>
+											<c:when test="${j == 4}">14:00</c:when>
+											<c:when test="${j == 5}">14:30</c:when>
+											<c:when test="${j == 6}">15:00</c:when>
+											<c:when test="${j == 7}">15:30</c:when>
+										</c:choose>
+									</td>
+									</c:when>
+									<c:when test="${i == 4}">					
+									<td>
+										<c:choose>
+											<c:when test="${j == 1}">16:00</c:when>
+											<c:when test="${j == 2}">16:30</c:when>
+											<c:when test="${j == 3}">17:00</c:when>
+											<c:when test="${j == 4}">17:30</c:when>
+											<c:when test="${j == 5}">18:00</c:when>
+											<c:when test="${j == 6}">18:30</c:when>
+											<c:when test="${j == 7}">19:00</c:when>
+										</c:choose>
+									</td>
+									</c:when>
+									</c:choose>
+								</c:if>												
+							</c:forEach>
+						</tr>
+						</c:if>	
+						<c:if test="${i % 2 == 1}"><%-- 홀수행 --%>
+						<tr style="font-size: 14px">
+							<td  class="py-3 text-center text-primary" style="font-size: 14px">
+								<p class="m-0 p-0">&nbsp;</p>
+								<p class="m-0 p-0">예약 가능</p>
+								<p class="m-0 p-0">헌혈 종류</p>
+								<p class="m-0 p-0">&nbsp;</p>
+							</td>						
+							<c:choose>
+								<c:when test="${i == 1}"> <%-- 09:00 ~ 12:00 데이터 출력 --%>
+									<c:forEach var = "n" begin = "0" end="6">								
+										<c:set var="printList" value="${resultList.get(n)}" />
+										<c:set var="rsvTime" value="${timeList.get(n)}" />
+										<td>
+										<c:if test="${printList.get(0)}">
+											<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="${rsvTime}" name="donationTypeNo" value="1"> 전혈</label></p>												
+										</c:if>
+										<c:if test="${printList.get(1)}">
+											<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="${rsvTime}" name="donationTypeNo" value="2"> 혈소판</label></p>												
+										</c:if>
+										<c:if test="${printList.get(2)}">
+											<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="${rsvTime}" name="donationTypeNo" value="3"> 혈장</label></p>												
+										</c:if>
+										<c:if test="${printList.get(3)}">
+											<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="${rsvTime}" name="donationTypeNo" value="4"> 혈장혈소판</label></p>													
+										</c:if>
+										</td>
+									</c:forEach>
+								</c:when>
+								<c:when test="${i == 3}"> <%-- 12:30 ~ 15:30 데이터 출력 --%>
+									<c:forEach var = "n" begin = "7" end="13">								
+										<c:set var="printList" value="${resultList.get(n)}" />
+										<c:set var="rsvTime" value="${timeList.get(n)}" />
+										<td>
+										<c:if test="${printList.get(0)}">
+											<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="${rsvTime}" name="donationTypeNo" value="1"> 전혈</label></p>												
+										</c:if>
+										<c:if test="${printList.get(1)}">
+											<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="${rsvTime}" name="donationTypeNo" value="2"> 혈소판</label></p>												
+										</c:if>
+										<c:if test="${printList.get(2)}">
+											<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="${rsvTime}" name="donationTypeNo" value="3"> 혈장</label></p>												
+										</c:if>
+										<c:if test="${printList.get(3)}">
+											<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="${rsvTime}" name="donationTypeNo" value="4"> 혈장혈소판</label></p>													
+										</c:if>
+										</td>
+									</c:forEach>
+								</c:when>
+								<c:when test="${i == 5}"> <%-- 16:00 ~ 19:00 데이터 출력 --%>
+									<c:forEach var = "n" begin = "14" end="20">								
+										<c:set var="printList" value="${resultList.get(n)}" />
+										<c:set var="rsvTime" value="${timeList.get(n)}" />
+										<td>
+										<c:if test="${printList.get(0)}">
+											<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="${rsvTime}" name="donationTypeNo" value="1"> 전혈</label></p>												
+										</c:if>
+										<c:if test="${printList.get(1)}">
+											<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="${rsvTime}" name="donationTypeNo" value="2"> 혈소판</label></p>												
+										</c:if>
+										<c:if test="${printList.get(2)}">
+											<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="${rsvTime}" name="donationTypeNo" value="3"> 혈장</label></p>												
+										</c:if>
+										<c:if test="${printList.get(3)}">
+											<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="${rsvTime}" name="donationTypeNo" value="4"> 혈장혈소판</label></p>													
+										</c:if>
+										</td>
+									</c:forEach>
+								</c:when>
+							</c:choose>
+						</tr>	
+						</c:if>
+					</c:forEach>	
+				</table>				
+			</div>
+			<div class="p-4 row">				
+				<div class="col text-end">
+					<input type="submit" value="예약" class="btn btn-warning" />
+				</div>				
+			</div>
+		</form>
+	</div>
+	<div class="col-2"></div>
+</div>
+
+<script>
+	window.onload = function () { buildCalendar(); }    // 웹 페이지가 로드되면 buildCalendar 실행
+	
+	let tempMonth = new Date();
+	tempMonth.setDate(tempMonth.getDate() + 1);  // 현재 달을 페이지를 로드한 날의 달로 초기화
+	let nowMonth = tempMonth;
+	
+	let today = new Date();     // 페이지를 로드한 날짜를 저장 
+	let nextDay = today.setDate(today.getDate() + 1);			// 페이지를 로드한 다음날 - 초기 접속시 예약 리스트는 오늘 다음날을 보여줌
+	today.setHours(0,0,0,0);    // 비교 편의를 위해 today의 시간을 초기화
+	
+	
+	// 달력 생성 : 해당 달에 맞춰 테이블을 만들고, 날짜를 채워 넣는다.
+	function buildCalendar() {       
+	
+	    let firstDate = new Date(nowMonth.getFullYear(), nowMonth.getMonth(), 1);     // 이번달 1일
+	    let lastDate = new Date(nowMonth.getFullYear(), nowMonth.getMonth() + 1, 0);  // 이번달 마지막날
+	
+	    let tbody_Calendar = document.querySelector(".Calendar > tbody");
+	    document.getElementById("calYear").innerText = nowMonth.getFullYear();             // 연도 숫자 갱신
+	    document.getElementById("calMonth").innerText = leftPad(nowMonth.getMonth() + 1);  // 월 숫자 갱신
+	
+	    while (tbody_Calendar.rows.length > 0) {                        // 이전 출력결과가 남아있는 경우 초기화
+	        tbody_Calendar.deleteRow(tbody_Calendar.rows.length - 1);
+	    }
+	
+	    let nowRow = tbody_Calendar.insertRow();        // 첫번째 행 추가           
+	
+	    for (let j = 0; j < firstDate.getDay(); j++) {  // 이번달 1일의 요일만큼
+	        let nowColumn = nowRow.insertCell();        // 열 추가
+	    }
+	
+	    for (let nowDay = firstDate; nowDay <= lastDate; nowDay.setDate(nowDay.getDate() + 1)) {   // day는 날짜를 저장하는 변수, 이번달 마지막날까지 증가시키며 반복  
+	
+	        let nowColumn = nowRow.insertCell();        // 새 열을 추가하고
+	        nowColumn.innerText = leftPad(nowDay.getDate());      // 추가한 열에 날짜 입력
+	
+	    
+	        if (nowDay.getDay() == 0) {                 // 일요일인 경우 글자색 빨강으로
+	            nowColumn.style.color = "#DC143C";
+	        }
+	        if (nowDay.getDay() == 6) {                 // 토요일인 경우 글자색 파랑으로 하고
+	            nowColumn.style.color = "#0000CD";
+	            nowRow = tbody_Calendar.insertRow();    // 새로운 행 추가
+	        }
+	
+	        if (nowDay < today) {                       // 지난날인 경우
+	            nowColumn.className = "pastDay";
+	        }
+	      	else if (nowDay.getFullYear() == today.getFullYear() && nowDay.getMonth() == today.getMonth() && nowDay.getDate() == today.getDate()) { // 오늘인 경우           
+	           nowColumn.className = "today";
+	      	   nowColumn.classList.add("choiceDay");
+	           nowColumn.onclick = function () { 
+					let selectedDate = choiceDate(this); 
+					reservationList(selectedDate);
+	            }
+	        }
+	        else {                                      // 미래인 경우
+	            nowColumn.className = "futureDay";
+	            //nowColum.addEventListener("click", function() {});
+	            nowColumn.onclick = function () { 
+	            	let selectedDate = choiceDate(this); 
+	            	reservationList(selectedDate);
+	            }
+	            
+	        }
+	    }
+	
+	}
+	
+	// 날짜 선택
+	function choiceDate(nowColumn) {
+	
+	    if (document.getElementsByClassName("choiceDay")[0]) {                              // 기존에 선택한 날짜가 있으면
+	        document.getElementsByClassName("choiceDay")[0].classList.remove("choiceDay");  // 해당 날짜의 "choiceDay" class 제거
+	    }
+	    nowColumn.classList.add("choiceDay");           // 선택된 날짜에 "choiceDay" class 추가
+		
+		// 선택된 날짜
+		var selectedDate = new Date(nowMonth.getFullYear(), nowMonth.getMonth(), parseInt(nowColumn.innerText));
+		console.log("선택된 날짜 :", selectedDate);
+		
+		var year = selectedDate.getFullYear();
+		var month = selectedDate.getMonth() + 1;
+		var day = selectedDate.getDate();
+		
+		// 최종적으로 현재 선택한 날짜를 반환
+		return year + (month < 10 ? '0'+month :month) + (day < 10 ? '0' + day : day);
+	}
+	
+	// 이전달 버튼 클릭
+	function prevCalendar() {
+	    nowMonth = new Date(nowMonth.getFullYear(), nowMonth.getMonth() - 1, nowMonth.getDate());   // 현재 달을 1 감소
+	    buildCalendar();    // 달력 다시 생성
+	}
+	// 다음달 버튼 클릭
+	function nextCalendar() {
+	    nowMonth = new Date(nowMonth.getFullYear(), nowMonth.getMonth() + 1, nowMonth.getDate());   // 현재 달을 1 증가
+	    buildCalendar();    // 달력 다시 생성
+	}
+	
+	// input값이 한자리 숫자인 경우 앞에 '0' 붙혀주는 함수
+	function leftPad(value) {
+	    if (value < 10) {
+	        value = "0" + value;
+	        return value;
+	    }
+	    return value;
+	}
+	
+	function reservationList(selectedDate) { 
+		
+		console.log(selectedDate);
+		
+		$.ajax({
+			"url": "ajaxResvOneSelect",
+			"data": {"reservationDate": selectedDate},
+			"dataType": "json",
+			"type": "post",
+			"success": function(resData) {
+				console.log(resData);				
+				reservationPrint(resData);
+			},
+			"error": function() {
+				console.log("error");
+			}
+		});
+	}
+	
+	// Ajax로 서버로부터 읽어온 예약 현환 데이터를 화면에 출력하는 함수 
+	function reservationPrint(resData) {
+		
+		let data = resData.resultList
+		let reqDate = resData.reqDate;
+		let timeList = resData.timeList;
+		let resultHtml = "";
+		
+		
+		for(let i = 0; i < 6; i++) {
+			
+			if(i % 2 == 0) {	// 짝수행 일때
+				resultHtml += '<tr class="bg-danger bg-opacity-10 border-danger border-top border-bottom text-center fw-bold">'
+				
+				for(let j = 0; j < 8; j++) {
+					
+					if(j == 0) { // 첫 번째 열이면
+						resultHtml += '<td class="text-primary">'
+										+ '	시간'
+										+ '</td>';
+										
+					} else { // 첫 번째 열이 아니면
+						
+						resultHtml += "<td>";
+						
+						if(i == 0) {
+							switch(j) {
+								case 1:
+									resultHtml += "09:00";
+									break;
+								case 2:
+									resultHtml += "09:30";
+									break;
+								case 3:
+									resultHtml += "10:00";
+									break;
+								case 4:
+									resultHtml += "10:30";
+									break;
+								case 5:
+									resultHtml += "11:00";
+									break;
+								case 6:
+									resultHtml += "11:30";
+									break;
+								case 7:
+									resultHtml += "12:00";	
+									break;				
+							}
+							
+						} else if(i == 2) {
+							switch(j) {
+								case 1:
+									resultHtml += "12:30";
+									break;
+								case 2:
+									resultHtml += "13:00";
+									break;
+								case 3:
+									resultHtml += "13:30";
+									break;
+								case 4:
+									resultHtml += "14:00";
+									break;
+								case 5:
+									resultHtml += "14:30";
+									break;
+								case 6:
+									resultHtml += "15:00";
+									break;
+								case 7:
+									resultHtml += "15:30";	
+									break;				
+							}
+						} else if(i == 4) {
+							switch(j) {
+								case 1:
+									resultHtml += "16:00";
+									break;
+								case 2:
+									resultHtml += "16:30";
+									break;
+								case 3:
+									resultHtml += "17:00";
+									break;
+								case 4:
+									resultHtml += "17:30";
+									break;
+								case 5:
+									resultHtml += "18:00";
+									break;
+								case 6:
+									resultHtml += "18:30";
+									break;
+								case 7:
+									resultHtml += "19:00";	
+									break;				
+							}
+						}
+						resultHtml += "</td>";						
+						
+					} // end 첫 번째 열이 아니면
+					
+				}	// end Inner for
+				
+				resultHtml += "</tr>";
+				
+			} else { // 홀수행 일때 
+				
+				resultHtml += '<tr style="font-size: 14px">';
+				
+				// 첫 번째 열
+				resultHtml += '<td  class="py-3 text-center text-primary">'
+									+ '<p class="m-0 p-0">&nbsp;</p>'
+									+ '<p class="m-0 p-0">예약 가능</p>'
+									+ '<p class="m-0 p-0">헌혈 종류</p>'
+									+ '<p class="m-0 p-0">&nbsp;</p>'
+								+ '</td>';
+												  		
+		  		if(i == 1) { // 09:00 ~ 12:00 데이터 출력					
+		  			for(let n = 0; n <= 6; n++) {
+		  				let rsvTime = timeList[n];
+		  				resultHtml += '<td>';		  				
+		  				if(data[n][0]) {
+		  					resultHtml += '<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="' + rsvTime +'" name="donationTypeNo" value="1"> 전혈</label></p>';
+		  				}
+		  				if(data[n][1]) {
+		  					resultHtml += '<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="' + rsvTime +'" name="donationTypeNo" value="2"> 혈소판</label></p>';
+		  				}
+		  				if(data[n][2]) {
+		  					resultHtml += '<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="' + rsvTime +'" name="donationTypeNo" value="3"> 혈장</label></p>';
+		  				}
+		  				if(data[n][3]) {
+		  					resultHtml += '<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="' + rsvTime +'" name="donationTypeNo" value="4"> 혈장혈소판</label></p>';
+		  				}		  				
+		  				resultHtml += '</td>';
+		  			}
+				} else if(i == 3) { // 12:30 ~ 15:30 데이터 출력
+					for(let n = 7; n <= 13; n++) {
+						let rsvTime = timeList[n];
+		  				resultHtml += '<td>';		  				
+	  					if(data[n][0]) {
+		  					resultHtml += '<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="' + rsvTime +'" name="donationTypeNo" value="1"> 전혈</label></p>';
+		  				}
+		  				if(data[n][1]) {
+		  					resultHtml += '<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="' + rsvTime +'" name="donationTypeNo" value="2"> 혈소판</label></p>';
+		  				}
+		  				if(data[n][2]) {
+		  					resultHtml += '<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="' + rsvTime +'" name="donationTypeNo" value="3"> 혈장</label></p>';
+		  				}
+		  				if(data[n][3]) {
+		  					resultHtml += '<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="' + rsvTime +'" name="donationTypeNo" value="4"> 혈장혈소판</label></p>';
+		  				}		  				
+		  				resultHtml += '</td>';
+		  			}
+					
+				} else if(i == 5) { // 16:00 ~ 19:00 데이터 출력	
+					for(let n = 14; n <= 20; n++) {
+						let rsvTime = timeList[n];
+		  				resultHtml += '<td>';			
+	  					if(data[n][0]) {
+		  					resultHtml += '<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="' + rsvTime +'" name="donationTypeNo" value="1"> 전혈</label></p>';
+		  				}
+		  				if(data[n][1]) {
+		  					resultHtml += '<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="' + rsvTime +'" name="donationTypeNo" value="2"> 혈소판</label></p>';
+		  				}
+		  				if(data[n][2]) {
+		  					resultHtml += '<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="' + rsvTime +'" name="donationTypeNo" value="3"> 혈장</label></p>';
+		  				}
+		  				if(data[n][3]) {
+		  					resultHtml += '<p class="m-0 p-0"><label><input type="radio" class="donationRadio" data-time="' + rsvTime +'" name="donationTypeNo" value="4"> 혈장혈소판</label></p>';
+		  				}		  				
+		  				resultHtml += '</td>';
+		  			}
+				}
+				
+				resultHtml += "</tr>";
+				
+			} // end 홀수행 일때
+			
+		} // end Outer for
+				
+		let res_table = document.querySelector("#reservationTable");
+		let selectedDate = document.querySelector("#selectedDate");
+		$(res_table).empty();
+		selectedDate.innerHTML = reqDate;
+		res_table.innerHTML = resultHtml;
+		
+	} // end function
+	
+	$(function() {
+		$(".donationRadio").on("click", function() {
+			let dataTime = $(this).attr("data-time");
+			$("#reservationTime").val(dataTime);
+		});
+	});
+	
+	
+	$(function() {
+		$(".donationRadio").on("click", function() {
+			let valueNo = $(this).val();
+			$("#donationTypeNo").val(valueNo);
+		});
+	});
+	
+		
+	
+</script>
+

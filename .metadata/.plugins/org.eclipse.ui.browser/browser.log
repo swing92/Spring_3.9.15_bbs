@@ -1,0 +1,21 @@
+
+9월 02, 2021 22:10:35.113 NEW SESSION
+9월 02, 2021 22:10:35.113 [11096:21140:0902/221035.111:ERROR:device_event_log_impl.cc(214)] [22:10:35.111] USB: usb_service_win.cc:389 Could not read device interface GUIDs: 지정된 파일을 찾을 수 없습니다. (0x2)
+9월 02, 2021 22:10:35.138 [11096:21140:0902/221035.138:ERROR:device_event_log_impl.cc(214)] [22:10:35.138] Bluetooth: bluetooth_adapter_winrt.cc:1073 Getting Default Adapter failed.
+
+3월 26, 2022 21:19:07.976 NEW SESSION
+3월 26, 2022 21:19:07.976 [8212:22972:0326/211907.973:ERROR:device_event_log_impl.cc(214)] [21:19:07.973] USB: usb_service_win.cc:391 Could not read device interface GUIDs: 지정된 파일을 찾을 수 없습니다. (0x2)
+3월 26, 2022 21:19:08.241 [8212:22972:0326/211908.241:ERROR:device_event_log_impl.cc(214)] [21:19:08.241] Bluetooth: bluetooth_adapter_winrt.cc:1075 Getting Default Adapter failed.
+
+10월 05, 2022 03:18:57.403 NEW SESSION
+10월 05, 2022 03:18:57.403 [22112:3592:1005/031857.402:ERROR:account_info_fetcher.cc(62)] OnGetTokenFailure: Invalid credentials (credentials rejected by client).
+10월 05, 2022 03:18:59.731 [22112:3592:1005/031859.730:ERROR:device_event_log_impl.cc(214)] [03:18:59.731] USB: usb_service_win.cc:415 Could not read device interface GUIDs: 지정된 파일을 찾을 수 없습니다. (0x2)
+10월 05, 2022 03:18:59.756 [22112:3592:1005/031859.755:ERROR:device_event_log_impl.cc(214)] [03:18:59.756] Bluetooth: bluetooth_adapter_winrt.cc:1074 Getting Default Adapter failed.
+10월 05, 2022 03:19:57.378 [22112:19524:1005/031957.378:ERROR:util.cc(129)] Can't create base directory: C:\Program Files\Google\GoogleUpdater
+10월 05, 2022 03:23:18.784 [14216:3184:1005/032318.784:ERROR:device_event_log_impl.cc(214)] [03:23:18.784] USB: usb_service_win.cc:415 Could not read device interface GUIDs: 지정된 파일을 찾을 수 없습니다. (0x2)
+10월 05, 2022 03:23:18.790 [14216:3184:1005/032318.790:ERROR:device_event_log_impl.cc(214)] [03:23:18.791] Bluetooth: bluetooth_adapter_winrt.cc:1074 Getting Default Adapter failed.
+10월 05, 2022 03:24:16.291 [14216:24936:1005/032416.290:ERROR:util.cc(129)] Can't create base directory: C:\Program Files\Google\GoogleUpdater
+
+3월 19, 2023 17:03:17.125 NEW SESSION
+3월 19, 2023 17:03:17.125 INFO: Created TensorFlow Lite XNNPACK delegate for CPU.
+3월 19, 2023 18:10:28.464 [libprotobuf ERROR ..\..\third_party\protobuf\src\google\protobuf\message_lite.cc:133] Can't parse message of type "safe_browsing.ClientDownloadRequest" because it is missing required fields: (cannot determine missing fields for lite message)

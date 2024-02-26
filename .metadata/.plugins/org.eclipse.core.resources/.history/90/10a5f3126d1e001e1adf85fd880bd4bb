@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+
+	
+<mapper namespace="com.teamproject.theglory.mapper.ReservationMGMapper">
+
+	<select id="rsvList" resultType="ReservationMG" resultMap="ReservationResultMap">
+    	  select 
+    	  			 r.reservation_no, r.member_id , m.name , r.reservation_date , r.reservation_time , 
+					 s.state_name , dt.donationtype_name , l.location_name , r.state_no
+          from 
+          			reservation r , member m , location l , donationtype dt , state s
+         where
+         		    r.member_id = m.id 
+            and   
+                    r.location_no = l.location_no 
+            and
+                    r.donationtype_no = dt.donationtype_no
+            and
+                    r.state_no = s.state_no          
+           order by
+                    r.reservation_date
+	</select>
+	
+	<select id="rsvOne" resultType="ReservationMG" resultMap="ReservationResultMap">
+	    select r.member_id , m.member_name , r.reservation_date , r.reservation_time , 
+        r.state_no , dt.donationtype_name , l.location_name
+        from reservation r , member m , location l , donationtype dt
+       where r.member_id = m.id and r.location_no = l.location_no 
+       and r.donationtype_no = dt.donationtype_no and r.reservation_date = #{rdate}
+	</select>
+	
+	<update id="rsvStateUpdate">
+	    UPDATE reservation
+				SET state_no = 2
+		WHERE reservation_no = #{rNO};
+	</update>
+	
+	  <resultMap type="ReservationMG" id="ReservationResultMap">   
+       <result property="rNo" column="reservation_no"/>     
+       <result property="id" column="member_id"/> 
+       <result property="name" column="member_name"/>     
+       <result property="rdate" column="reservation_date"/>     
+       <result property="rtime" column="reservation_time"/>     
+       <result property="dname" column="donationtype_name"/>     
+       <result property="rstate" column="state_name"/>     
+       <result property="lname" column="location_name"/>         
+       <result property="stateNo" column="state_no"/> 
+    </resultMap>
+</mapper>

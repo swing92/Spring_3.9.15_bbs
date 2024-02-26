@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.teamproject.theglory.mapper.ReservationMapper">
+	
+	<select id="getLocationName" resultType="String">
+		SELECT 
+			location_name locationName 
+		FROM location
+		WHERE location_no = #{locationNo};
+
+	</select>
+								
+
+	<select id="resvBldHousStep2" resultMap="reservationResultMap">
+		SELECT
+		*
+		FROM reservation
+
+	</select>
+	
+	<select id="resvBldHousStep1" resultMap="reservationResultMap">
+		SELECT
+		*
+		FROM reservation
+	</select>
+						 
+	<select id="resvOneSelect" resultMap="reservationResultMap">
+		SELECT
+			d.donationtype_name, r.reservation_no, r.donationtype_no, r.reservation_time ,r.reservation_date
+		FROM reservation r, donationtype d 
+		where r.donationtype_no = d.donationtype_no
+			and r.reservation_date = #{reservationDate} 
+			and r.location_no = #{locationNo}
+			order by r.reservation_time, r.donationtype_no;
+	</select>
+	
+	<select id="resvBldHousStep4" resultMap="reservationResultMap">
+		SELECT
+		*
+		FROM reservation 
+	</select>
+	
+	<select id="getMember" resultType="Member">
+		SELECT * FROM member WHERE member_id = #{memberId}
+	</select>	
+	
+ 	<!-- 예약입력하기 -->
+	 <insert id="insertReservation" parameterType="Reservation" useGeneratedKeys="true" keyProperty="no">
+	 INSERT INTO reservation (member_id, reservation_date, reservation_time, location_no, state_no, donationtype_no)
+	 	VALUES(#{memberId}, #{reservationDate}, #{reservationTime},#{locationNo}, #{stateNo}, #{donationTypeNo})
+	 </insert>
+
+
+	<resultMap id="reservationResultMap" type="Reservation">  
+		<id property="reservationNo" column="reservation_no" />
+		<result property="stateNo" column="state_no" /> <!--insert로 뿌릴 때 필요한 애들  -->
+		<result property="donationTypeName" column="donationtype_name" /> <!--insert로 뿌릴 때 , view, select 에 다 필요한 애들  -->
+		<result property="locationName" column="location_name" /> <!-- view 에 다 필요한 애들  -->
+		<result property="locationNo" column="location_no" /><!-- insert할 떄 -->
+		<result property="reservationDate" column="reservation_date" /><!--insert로 할 때 -->
+		<result property="reservationTime" column="reservation_time" /><!-- insert할 떄 -->
+		<result property="memberId" column="member_id" /><!-- insert할 떄 -->
+		<result property="donationTypeNo" column="donationtype_no" />
+	</resultMap>
+
+
+</mapper>	
+
+
+

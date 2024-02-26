@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="ImportExportAction">
+		<item key="ImportExportPage.STORE_SELECTED_IMPORT_WIZARD_ID" value="org.eclipse.ui.wizards.import.ExternalProject"/>
+		<item key="ImportExportPage.STORE_SELECTED_EXPORT_WIZARD_ID" value="org.eclipse.ui.wizards.export.ZipFile"/>
+		<list key="ImportExportPage.STORE_EXPANDED_IMPORT_CATEGORIES">
+			<item value="org.eclipse.ui.Basic"/>
+		</list>
+		<list key="ImportExportPage.STORE_EXPANDED_EXPORT_CATEGORIES">
+			<item value="org.eclipse.ui.Basic"/>
+		</list>
+	</section>
+	<section name="ZipFileExportWizard">
+		<item key="WizardZipFileResourceExportPage1.STORE_CREATE_STRUCTURE_ID" value="true"/>
+		<item key="WizardZipFileResourceExportPage1.STORE_COMPRESS_CONTENTS_ID" value="true"/>
+		<list key="WizardZipFileResourceExportPage1.STORE_DESTINATION_NAMES_ID">
+			<item value="D:\[00000]Naver동기화\[00]학원강의교안\Spring_수업교안\[000]Spring 강의교안\Spring 교안8\SpringMVCProject만들기\springmvc-template01.zip"/>
+			<item value="D:\[00000]Naver동기화\[00]학원강의교안\Spring_수업교안\[00]SpringBBS\springstudy-bbs06.zip"/>
+			<item value="D:\[00000]Naver동기화\[00]학원강의교안\Spring_수업교안\[00]SpringBBS\springstudy-bbs05.zip"/>
+			<item value="D:\[00000]Naver동기화\[00]학원강의교안\Spring_수업교안\[00]SpringBBS\springstudy-bbs04.zip"/>
+			<item value="D:\[00000]Naver동기화\[00]학원강의교안\Spring_수업교안\[00]SpringBBS\springstudy-bbs03.zip"/>
+			<item value="D:\[00000]Naver동기화\[00]학원강의교안\Spring_수업교안\[00]SpringBBS\springstudy-bbs02.zip"/>
+			<item value="D:\[00000]Naver동기화\[00]학원강의교안\Spring_수업교안\[00]SpringBBS\springstudy-bbs01.zip"/>
+			<item value="D:\[00000]Naver동기화\[00]학원강의교안\Spring_수업교안\[000]Spring 강의교안\Spring 교안8\springstudy-ch0401.zip"/>
+			<item value="D:\[00000]Naver동기화\[00]학원강의교안\Spring_수업교안\[000]Spring 강의교안\Spring 교안8\springstudy-ch03exam.zip"/>
+			<item value="D:\[00000]Naver동기화\[00]학원강의교안\Spring_수업교안\[000]Spring 강의교안\Spring 교안8\springstudy-ch03.zip"/>
+			<item value="D:\[00000]Naver동기화\[00]학원강의교안\Spring_수업교안\[000]Spring 강의교안\Spring 교안8\springstudy-ch02exam.zip"/>
+			<item value="D:\[00000]Naver동기화\[00]학원강의교안\Spring_수업교안\[000]Spring 강의교안\Spring 교안8\springstudy-ch02.zip"/>
+			<item value="D:\[00000]Naver동기화\[00]학원강의교안\Spring_수업교안\[000]Spring 강의교안\Spring 교안8\springstudy-ch01.zip"/>
+			<item value="D:\[00000]Naver동기화\[00]학원강의교안\Spring_수업교안\[000]Spring 강의교안\Spring 교안8\springclass-ch03.zip"/>
+			<item value="D:\[00000]Naver동기화\[00]학원강의교안\Spring_수업교안\[000]Spring 강의교안\Spring 교안8\springclass-ch02.zip"/>
+			<item value="D:\[00000]Naver동기화\[00]학원강의교안\[00]Cloud_Linux_Docker\[00]아마존웹서비스(AWS)\[00]아마존웹서비스(AWS)_수업자료\[00]아마존웹서비스(AWS)_교안5_수업자료\docker-blog-rds.zip"/>
+			<item value="D:\[00000]Naver동기화\[00]학원강의교안\[00]Cloud_Linux_Docker\[00]아마존웹서비스(AWS)\[00]아마존웹서비스(AWS)_수업자료\[00]아마존웹서비스(AWS)_교안5_수업자료\docker-blog.zip"/>
+			<item value="D:\[00000]Naver동기화\[00]학원강의교안\[00]Cloud_Linux_Docker\[00]아마존웹서비스(AWS)\[00]아마존웹서비스(AWS)_수업자료\[00]아마존웹서비스(AWS)_교안5_수업자료\blog-app.zip"/>
+			<item value="D:\[00000]Naver동기화\[00]학원강의교안\Spring_수업교안\[00]SpringBlog\blog-app.zip"/>
+			<item value="D:\NaverCloud\[00]학원강의교안\Spring_수업교안\[00]SpringBBS\springstudy-bbs06.zip"/>
+		</list>
+	</section>
+	<section name="EditorSelectionDialog">
+		<item key="EditorSelectionDialog.STORE_ID_FILE_EXTENSION" value=".js"/>
+		<item key="EditorSelectionDialog.STORE_ID_INTERNAL_EXTERNAL" value="false"/>
+		<item key="EditorSelectionDialog.STORE_ID_DESCR" value="org.eclipse.wst.jsdt.chromium.debug.ui.editors.JsEditor"/>
+	</section>
+	<section name="NewWizardAction">
+		<item key="NewWizardSelectionPage.STORE_SELECTED_ID" value="org.eclipse.jst.jsp.ui.internal.wizard.NewJSPWizard"/>
+		<list key="NewWizardSelectionPage.STORE_EXPANDED_CATEGORIES_ID">
+			<item value="org.eclipse.wst.web.ui"/>
+		</list>
+	</section>
+	<section name="InstallationDialogSettings">
+		<item key="DIALOG_X_ORIGIN" value="93"/>
+		<item key="DIALOG_Y_ORIGIN" value="-20"/>
+		<item key="DIALOG_WIDTH" value="702"/>
+		<item key="DIALOG_HEIGHT" value="740"/>
+		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕"/>
+	</section>
+	<section name="org.eclipse.ui.preferences.keysPreferencePage">
+		<item key="actionSetFilter" value="true"/>
+		<item key="internalFilter" value="true"/>
+		<item key="uncategorizedFilter" value="true"/>
+	</section>
+</section>

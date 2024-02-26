@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy 4 elements to &apos;views_old&apos;&#x0D;&#x0A;- Original project: &apos;springstudybs-bbs01Home&apos;&#x0D;&#x0A;- Destination element: &apos;views_old&apos;&#x0D;&#x0A;- Original elements:&#x0D;&#x0A;     boardList.jsp&#x0D;&#x0A;     updateForm.jsp&#x0D;&#x0A;     writeForm.jsp&#x0D;&#x0A;     boardDetail.jsp" description="Copy files" element1="src/main/webapp/WEB-INF/views/boardList.jsp" element2="src/main/webapp/WEB-INF/views/updateForm.jsp" element3="src/main/webapp/WEB-INF/views/writeForm.jsp" element4="src/main/webapp/WEB-INF/views/boardDetail.jsp" files="4" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1671465724549" target="/springstudybs-bbs01/src/main/webapp/WEB-INF/views_old" units="0" version="1.0"/>
+</session>

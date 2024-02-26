@@ -1,0 +1,3 @@
+eclipse.preferences.version=1
+org.eclipse.ltk.ui.refactoring.do.not.warn.delete.descriptor=true
+org.eclipse.ltk.ui.refactoring.do.not.warn.delete.history=true

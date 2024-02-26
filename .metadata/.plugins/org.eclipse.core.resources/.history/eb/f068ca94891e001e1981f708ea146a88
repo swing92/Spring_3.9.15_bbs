@@ -1,0 +1,121 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+<div class="row my-5" id="global-content">
+	<div class="col">
+		<div class="row my-3 fw-5">
+			<div class="col">
+				<h2 class="fs-3 fw-bold text-center">마지막</h2>
+			</div>
+		</div>
+		<div class="row my-3">
+			<div class="col-8 offset-2">
+				<div class="row mt-2 mb-3 border-bottom fw-bold"
+					value="${sessionScope.member.name}">&nbsp;${sessionScope.member.name}님의
+					예약정보 입니다.</div>
+			</div>
+		</div>
+		<div class="row my-3">
+			<div class="col-8 offset-2">
+				<label for="writer" class="form-label">이름 </label> <input
+					type="text" class="form-control" name="writer" id="writer"
+					value="${sessionScope.member.name}" maxlength="4">
+			</div>
+			<div class="row my-3">
+				<div class="col-8 offset-2">
+					<label for="id" class="form-label">생년월일 </label>
+					<div class="row">
+						<div class="col-md-3">
+							<input type="text" class="form-control" name="birthdate"
+								id="birthdate" value="${sessionScope.member.birth}"
+								maxlength="4">
+							<!-- 사용자 생년월일 받아오기  -->
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row my-3">
+				<div class="col-8 offset-2">
+					<label for="phone2" class="form-label">휴대전화</label>
+					<div class="row">
+						<div class="col-md-3">
+							<select class="form-select" name="phone1" id="phone1"
+								maxlength="4">
+								<option>010</option>
+								<option>011</option>
+								<option>016</option>
+								<option>017</option>
+								<option>018</option>
+								<option>019</option>
+							</select>
+						</div>
+						-
+						<div class="col-md-4">
+							<input type="text" class="form-control" name="phone2" id="phone2"
+								maxlength="4" value="${sessionScope.member.phone}">
+						</div>
+						-
+						<div class="col-md-4">
+							<input type="text" class="form-control" name="phone3" id="phone3"
+								maxlength="4" value="${sessionScope.member.phone}">
+						</div>
+					</div>
+				</div>
+			</div>
+			<form action="insertAction">
+				<div class="col-8 offset-md-2 text-center">
+					<table border="1">
+						<tr>
+							<td>이름</td>
+							<td><input type="text" name="memberId"
+								value="${sessionScope.member.name}"></td>
+						</tr>
+
+						<tr>
+							<td>아이디</td>
+							<td><input type="text" name="memberId"
+								value="${sessionScope.member.id}"></td>
+						</tr>
+						<tr>
+							<td>날짜</td>
+							<td><input type="text" name="reservationDate"
+								value="${reservationDate}"></td>
+							<!--ex) 20230629 -->
+						</tr>
+						<tr>
+							<td>시간</td>
+							<td><input type="text" name="reservationTime"
+								value="${reservationTime}"></td>
+							<!--ex) 0900 -->
+						</tr>
+						<tr>
+							<td>장소</td>
+							<td><input type="text" name="locationNo"
+								value="${locationNo}"></td>
+							<!-- 숫자 -->
+						</tr>
+						<tr>
+							<td>헌혈상태</td>
+							<td><input type="text" name="stateNo" value="1"></td>
+							<!-- 숫자 -->
+						</tr>
+						<tr>
+							<td>헌혈타입</td>
+							<td><input type="text" name="donationtypeNo"
+								value="${donationTypeNo}"></td>
+							<!-- 숫자 -->
+						</tr>
+					</table>
+					<button type="submit">예약취소</button>
+					<a href="resvBldHousStep1"><button type="button"
+							class="btn btn-primary">예약 확인</button></a>
+				</div>				
+			</div>
+			</form>
+
+		</div>
+	</div>
+</div>
