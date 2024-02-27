@@ -8,6 +8,7 @@
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="springstudy"/>
 			<item value="listen"/>
 			<item value="selectedDate"/>
 			<item value="btnAtt"/>
@@ -22,7 +23,6 @@
 			<item value="searchZip"/>
 			<item value="bList"/>
 			<item value="mysql"/>
-			<item value="Group"/>
 		</list>
 		<list key="replacehistory">
 			<item value="boardList"/>

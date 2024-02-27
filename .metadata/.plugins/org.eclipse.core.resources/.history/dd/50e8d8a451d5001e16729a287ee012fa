@@ -1,0 +1,5 @@
+package com.springclass.bbs.dao;
+
+public class BoardDaoImpl {
+
+}
