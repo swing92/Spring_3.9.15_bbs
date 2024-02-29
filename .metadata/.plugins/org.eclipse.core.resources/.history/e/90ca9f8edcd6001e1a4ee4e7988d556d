@@ -1,0 +1,5 @@
+package com.springclass.bbs.service;
+
+public interface BoardService {
+
+}

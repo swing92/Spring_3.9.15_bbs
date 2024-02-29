@@ -1,13 +1,36 @@
 package com.springclass.bbs.dao;
 
+import java.util.List;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.springclass.bbs.domain.Board;
 
 // BoardDao를 구현(implements BoardDao(인터페이스))
 // 게시글 리스트를 MyBatis의 SessionTemplate을 이용해 DB로부터 읽어와 반환
 
 @Repository	//이 class가 데이터 액세스(데이터 저장소) 계층의 컴포넌트(Bean)임을 선언
 public class BoardDaoImpl implements BoardDao{
+	
 	// BoardMapper.xml에 정의한 Mapper namespace를 상수로 정의
 	private final String NAME_SPACE = "com.springclass.bbs.mapper.BoardMapper";
 	
+	// MyBatis-spring은 MyBatis의 SqlSession 기능과 스프링 DB 지원 기능을 연동해주는 SqlSessionTemplate클래스 제공
+	// SqlSessionTemplaet은 SqlSession 을 구현해 스프링 연동부부을 구현
+	private SqlSessionTemplate sqlSession;
+	
+	// 컴파일러에 의해 기본 생성자 만들어짐
+	@Autowired	//필요한 의존 객체의 “타입"에 해당하는 빈을 찾아 주입한다.(생성자, setter, 필드)
+	public void setSqlSession(SqlSessionTemplate sqlSession) {
+		this.sqlSession = sqlSession;
+	}
+	
+	// 한 페이지에 보여질 게시글 리스트 요청 시 호출되는 메소드
+	// 현재 페이지에 해당하는 게시글 리스트를 DB에서 읽어와 반환
+	@Override
+	public List<Board> boardList() {
+		return sqlSession.selectList(NAME_SPACE + ".boardList");
+	}
 }
