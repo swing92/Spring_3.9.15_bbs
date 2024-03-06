@@ -1,16 +1,23 @@
 package com.springclass.bbs.service;
 
-import java.util.List;
+import java.util.Map;
 
 import com.springclass.bbs.domain.Board;
 
 public interface BoardService {
 	
-	// BoardDao를 이용해 게시판 테이블에서 현재 페이지에 해당하는 게시글 리스트를 읽어와 반환하는 메소드
-	public abstract List<Board> boardList();
+//	// BoardDao를 이용해 게시판 테이블에서 현재 페이지에 해당하는 게시글 리스트를 읽어와 반환하는 메소드
+//	public abstract List<Board> boardList();
 	
-	// 게시판 테이블에서 no에 해당하는 게시글을 읽어와 반환하는 메소드
-	public abstract Board getBoard(int no);
+	// (수정)BoardDao를 이용해 게시판 테이블에서 한 페이지에 해당하는 게시글 리스트와, 페이징 처리에 필요한 데이터를 Map 객체로 반환하는 메소드
+	public abstract Map<String, Object> boardList(int pageNum);
+	
+//	// 게시판 테이블에서 no에 해당하는 게시글을 읽어와 반환하는 메소드
+//	public abstract Board getBoard(int no);
+	
+	// (수정)게시판 테이블에서 no에 해당하는 게시글의 조회수를 증가시키고 읽어와 반환하는 메소드
+	// isCount == true면 게시글 상세보기, false면 게시글 수정 폼 요청
+	public abstract Board getBoard(int no, boolean isCount);
 	
 	// 새로운 게시글을 추가하는 메소드
 	public abstract void insertBoard(Board board);

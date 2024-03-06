@@ -1,7 +1,7 @@
 package com.springclass.bbs.controller;
 
 import java.io.PrintWriter;
-import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.springclass.bbs.domain.Board;
 import com.springclass.bbs.service.BoardService;
@@ -34,33 +35,65 @@ public class BoardController {
 	// Spring이 이 메소드를 호출하면서 Model타입의 객체를 넘겨줌
 	// 그래서 이 Model을 받아 이 객체에 결과 데이터를 담기만 하면 뷰로 전달됨
 	
-	// 게시글 리스트 보기 요청을 처리하는 메소드
-	@RequestMapping(value= {"/boardList", "/list"}, method = RequestMethod.GET)
-	public String boardList(Model model) {
-		
-		// Service 클래스를 이용해 게시글 리스트를 가져옴
-		List<Board> bList = boardService.boardList();
+//	// 게시글 리스트 보기 요청을 처리하는 메소드
+//	@RequestMapping(value= {"/boardList", "/list"}, method = RequestMethod.GET)
+//	public String boardList(Model model) {
+//		
+//		// Service 클래스를 이용해 게시글 리스트를 가져옴
+//		List<Board> bList = boardService.boardList();
+//		
+//		// 파라미터로 받은 Model객체에 view로 보낼 모델을 저장
+//		// Model에는 도메인 객체(Board)나 비즈니스 로직(Service)을 처리한 결과를 저장
+//		model.addAttribute("bList", bList);
+//		
+//		// 
+//		return "boardList";
+//	}
+	
+	// Controller 메소드에 요청 파라미터 이름과 동일한 이름의 메소드 파라미터를 지정하면 스프링으로부터 요청 파라미터를 넘겨받을 수 있음
+	// 요청 파라미터와 메소드의 파라미터 이름이 다른 경우에는 매소드의 파라미터 앞에 @RequestParam("요청 파라미터 이름")을 써서 지정하면 됨
+	
+	// (수정)게시글 리스트 보기 요청을 처리하는 메소드
+	@RequestMapping(value= {"/boardList", "/list"}, method=RequestMethod.GET)
+	public String BoardList(Model model, @RequestParam(value="pageNum", required=false, defaultValue="1")int pageNum) {
+		// Service 클래스를 이용해 게시글 리스트 가져오기
+		Map<String, Object> modelMap = boardService.boardList(pageNum);
 		
 		// 파라미터로 받은 Model객체에 view로 보낼 모델을 저장
-		// Model에는 도메인 객체(Board)나 비즈니스 로직(Service)을 처리한 결과를 저장
-		model.addAttribute("bList", bList);
+		model.addAllAttributes(modelMap);
 		
-		// 
+		// 반환
 		return "boardList";
 	}
 	
-	// 게시글 상세보기 요청을 처리하는 메서드
-	@RequestMapping("/boardDetail")	// method 지정 안해서 get, post 둘 다 가능
-	public String boardDetail(Model model, int no) {
-		// Service 클래스를 이용해 no에 해당하는 게시글을 가져옴
-		Board board = boardService.getBoard(no);
+	
+//	// 게시글 상세보기 요청을 처리하는 메서드
+//	@RequestMapping("/boardDetail")	// method 지정 안해서 get, post 둘 다 가능
+//	public String boardDetail(Model model, int no) {
+//		// Service 클래스를 이용해 no에 해당하는 게시글을 가져옴
+//		Board board = boardService.getBoard(no);
+//		
+//		// 파라미터로 받은 Model객체에 view로 보낼 모델을 저장
+//		// Model에는 도메인 객체(Board)나 비즈니스 로직(Service)을 처리한 결과를 저장
+//		model.addAttribute("board", board);
+//		
+//		// servlet-context.xml의 ViewResolver에서 prefix와 suffix에 지정한 정보를 제외한 뷰 이름을 문자열로 반환
+//		// 뷰 이름을 반환하면 포워드 되어 제어가 뷰 페이지로 이동
+//		return "boardDetail";
+//	}
+	
+	// (수정)게시글 상세보기 요청을 처리하는 메서드
+	@RequestMapping("/boardDetail")
+	public String boardDetail(Model model, int no, @RequestParam(value="pageNum", required=false, defaultValue="1")int pageNum) {
+		// Service 클래스의 getBoard 메소드를 이용해 no에 해당하는 게시글 정보를 읽어오는데,
+		// 추가로 두 번째 인수에 true를 지정해서 게시글 읽은 횟수를 1 증가시켜서 읽어왕!
+		Board board = boardService.getBoard(no, true);
 		
-		// 파라미터로 받은 Model객체에 view로 보낼 모델을 저장
-		// Model에는 도메인 객체(Board)나 비즈니스 로직(Service)을 처리한 결과를 저장
+		// 파라미터로 받은 모델 객체에 뷰로 보낼 모델을 저장
 		model.addAttribute("board", board);
+		model.addAttribute("pageNum", pageNum);
 		
-		// servlet-context.xml의 ViewResolver에서 prefix와 suffix에 지정한 정보를 제외한 뷰 이름을 문자열로 반환
-		// 뷰 이름을 반환하면 포워드 되어 제어가 뷰 페이지로 이동
+		// 반환
 		return "boardDetail";
 	}
 	
@@ -111,7 +144,7 @@ public class BoardController {
 		}
 		
 		// Service 클래스를 이용해 게시글 수정 폼에 출력할 no에 해당하는 게시글 가져오기
-		Board board = boardService.getBoard(no);
+		Board board = boardService.getBoard(no, false);
 		
 		// 파라미터로 받은 모델 객체에 뷰로 보낼 모델 저장
 		// Model에는 도메인 객체(Board)나 비즈니스 로직(Service)을 처리한 결과를 저장

@@ -6,9 +6,17 @@ import com.springclass.bbs.domain.Board;
 
 public interface BoardDao {
 	
-	// 한 페이지에 보여질 게시글 리스트 요청 시 호출되는 메소드
-	// 현재 페이지에 해당하는 글 리스트를 DB에서 읽어와 반환
-	public abstract List<Board> boardList();
+//	// 한 페이지에 보여질 게시글 리스트 요청 시 호출되는 메소드
+//	// 현재 페이지에 해당하는 글 리스트를 DB에서 읽어와 반환
+//	public abstract List<Board> boardList();
+	
+	// 한 페이지에 보여질 게시글 리스트 요청 시 호출되는 메소드(수정)
+	// 현재 페이지에 해당하는 게시글 리스트를 DB에서 읽어와 반환
+	public abstract List<Board> boardList(int startRow, int num);
+	
+	// 전체 게시글 수를 계산하기 위해 호출되는 메소드(추가) >>> paging처리에 사용!
+	// DB테이블에 등록된 모든 게시글의 수를 반환
+	public abstract int getBoardCount();
 	
 	// 게시글 상세보기 요청 시 호출되는 메소드
 	// no에 해당하는 게시글을 DB에서 읽어와 Board객체로 반환
@@ -30,11 +38,6 @@ public interface BoardDao {
 	// no에 해당하는 게시글을 DB에서 삭제
 	public abstract void deleteBoard(int no);
 	
-	// 한 페이지에 보여질 게시글 리스트 요청 시 호출되는 메소드
-	// 현재 페이지에 해당하는 게시글 리스트를 DB에서 읽어와 반환
-	public abstract List<Board> boardList(int startRow, int num);
-	
-	// 전체 게시글 수를 계산하기 위해 호출되는 메소드 >>> paging처리에 사용!
-	// DB테이블에 등록된 모든 게시글의 수를 반환
-	public abstract int getBoardCount();
+	// 게시글 조회한 횟수 증가시키는 메소드
+	public abstract void incrementReadCount(int no);
 }

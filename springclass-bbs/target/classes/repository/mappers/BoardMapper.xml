@@ -37,11 +37,28 @@
 		<result property="file1" column="file1"/>
 	</resultMap>
 	
-	
 	<!-- 게시글 리스트 가져오는 맵핑구문 -->
-	<select id="boardList" resultType="Board" resultMap="boardResultMap">
-		SELECT * FROM springbbs ORDER BY no DESC
+	<select id="boardList" resultType="Board" resultMap="boardResultMap" parameterType="hashmap">
+		<!-- SELECT * FROM springbbs ORDER BY no DESC -->
+		
+		<!-- (수정)한 페이지에 해당하는 게시글 리스트 가져오는 맵핑으로 수정 -->
+		SELECT * FROM springbbs ORDER BY no DESC LIMIT #{startRow}, #{num}
+		<!-- LIMIT : MySQL에서 제공하는 명령어, 검색된 데이터의 특정 행 번호부터 지정한 개수만큼 행을 읽어오는 명령어 -->
+		<!-- 		 LIMIT 시작행, 가져올 데이터의 개수 -->
+		<!-- DAO에서 startRow랑 num을 HashMap에 저장해서 넘겨줬기 때문에 parameterType="hashmap" 추가 -->
 	</select>
+	
+	<!-- 전체 게시글 수를 반환하는 맵핑구문 -->
+	<select id="getBoardCount" resultType="int">
+		SELECT COUNT(no) FROM springbbs
+		<!-- 참고 : COUNT함수는 null값은 개수에서 제외함 -->
+	</select>
+	
+	<!-- (추가)no에 해당하는 게시글의 읽은 횟수(read_count)를 증가시키는 맵핑구문 -->
+	<update id="incrementReadCount">
+		UPDATE springbbs SET read_count = read_count + 1 WHERE no=#{no}
+		<!-- 				 read_count += 1 이거는 안됨ㅋㅋㅋㅋ -->
+	</update>
 	
 	
 	<!-- resultMap 태그로 정의한 id를 지정하면 SQL쿼리에 컬럼명의 별칭을 사용하지 않고 자바 모델 객체로 변환가능 -->
