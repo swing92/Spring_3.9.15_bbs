@@ -19,3 +19,6 @@
 3월 19, 2023 17:03:17.125 NEW SESSION
 3월 19, 2023 17:03:17.125 INFO: Created TensorFlow Lite XNNPACK delegate for CPU.
 3월 19, 2023 18:10:28.464 [libprotobuf ERROR ..\..\third_party\protobuf\src\google\protobuf\message_lite.cc:133] Can't parse message of type "safe_browsing.ClientDownloadRequest" because it is missing required fields: (cannot determine missing fields for lite message)
+
+3월 04, 2024 16:03:24.09 NEW SESSION
+3월 04, 2024 16:03:24.09 INFO: Created TensorFlow Lite XNNPACK delegate for CPU.

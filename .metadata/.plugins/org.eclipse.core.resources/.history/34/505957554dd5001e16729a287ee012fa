@@ -1,5 +1,0 @@
-package com.springclass.bbs.dao;
-
-public interface BoardDao {
-
-}

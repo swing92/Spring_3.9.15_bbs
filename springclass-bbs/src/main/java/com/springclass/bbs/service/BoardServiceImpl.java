@@ -27,4 +27,40 @@ public class BoardServiceImpl implements BoardService {
 	public List<Board> boardList() {
 		return boardDao.boardList();
 	}
+	
+	// BoardDao를 이용해 게시판 테이블에서 no에 해당하는 게시글을 읽어와 반환하는 메소드
+	@Override
+	public Board getBoard(int no) {
+		return boardDao.getBoard(no);
+	}
+	
+	// BoardDao를 이용해 새로운 게시글을 추가하는 메소드
+	@Override
+	public void insertBoard(Board board) {
+		boardDao.insertBoard(board);
+	}
+	
+	// 게시글 수정, 삭제 시 비밀번호가 맞는지 체크하는 메소드
+	// 맞으면 true, 틀리면 false반환
+	public boolean isPassCheck(int no, String pass) {
+		boolean result = false;
+		
+		// BoardDao를 이용해 DB에서 no에 해당하는 비밀번호 읽어옴
+		String dbPass = boardDao.isPassCheck(no, pass);
+		
+		if(dbPass.equals(pass)) {
+			result = true;
+		}
+		return result;
+	}
+	
+	// BoardDao를 이용해 게시글을 수정하는 메소드
+	public void updateBoard(Board board) {
+		boardDao.updateBoard(board);
+	}
+	
+	// BoardDao를 이용해 no에 해당하는 게시글을 삭제하는 메소드
+	public void deleteBoard(int no) {
+		boardDao.deleteBoard(no);
+	}
 }
