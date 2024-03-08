@@ -42,17 +42,62 @@
 		<!-- SELECT * FROM springbbs ORDER BY no DESC -->
 		
 		<!-- (수정)한 페이지에 해당하는 게시글 리스트 가져오는 맵핑으로 수정 -->
-		SELECT * FROM springbbs ORDER BY no DESC LIMIT #{startRow}, #{num}
+		<!-- SELECT * FROM springbbs ORDER BY no DESC LIMIT #{startRow}, #{num} -->
 		<!-- LIMIT : MySQL에서 제공하는 명령어, 검색된 데이터의 특정 행 번호부터 지정한 개수만큼 행을 읽어오는 명령어 -->
 		<!-- 		 LIMIT 시작행, 가져올 데이터의 개수 -->
 		<!-- DAO에서 startRow랑 num을 HashMap에 저장해서 넘겨줬기 때문에 parameterType="hashmap" 추가 -->
+		
+		<!-- (수정의 수정)한 페이지에 해당하는 게시글 리스트, 검색리스트를 가져오는 맵핑구문으로 수정 -->
+		SELECT * FROM springbbs
+		<where>
+			<!-- where절을 동적으로 생성하는 요소 -->
+			<!-- if절이 true일 때 생성 -->
+			<!-- SQL에서 사용할 파라미터를 HashMap으로 받음, 사용 시에는 key이름으로 -->
+			<!-- 조건절에서는 #{} 없이 파라미터 이름만 지정하며 문자열은 ""나 ''로 감싸줘야 함 -->
+			<!-- 부등호 사용 시 XML에서 태그로 사용되는 문자라서 문제 발생하므로 CDATA Section으로 묶어줘야함 -->
+			<!-- CDATA(Character DATA) : CDATA Section 안에 있는 데이터는 해석(Parsing)하지 말ㄹ고 문자 데이터 그대로 처리하라는 의미 -->
+			<if test="type == 'title'">
+				title LIKE CONCAT('%', #{keyword},'%')
+			</if>
+			<if test="type == 'writer'">
+				writer LIKE CONCAT('%', #{keyword},'%')
+			</if>
+			<if test="type == 'content'">
+				content LIKE CONCAT('%', #{keyword}, '%')
+			</if>
+		</where>
+		ORDER BY no DESC LIMIT #{startRow}, #{num}
 	</select>
 	
 	<!-- 전체 게시글 수를 반환하는 맵핑구문 -->
-	<select id="getBoardCount" resultType="int">
+<!-- 	<select id="getBoardCount" resultType="int">
 		SELECT COUNT(no) FROM springbbs
-		<!-- 참고 : COUNT함수는 null값은 개수에서 제외함 -->
+		참고 : COUNT함수는 null값은 개수에서 제외함
+	</select> -->
+	
+	<!-- (수정)전체 게시글 수와 검색리스트에 대한 게시글 수를 반환하는 맵핑구문 -->
+	<select id="getBoardCount" parameterType="hashmap" resultType="int">
+		<!-- DAO에서 type과 keyword를 HashMap으로 넘겨줬으니 parameterType="hashmap"으로 지정 -->
+		SELECT COUNT(no) FROM springbbs
+		<!-- where절 안에 해당하는게 있으면 where절이 생성되어 검색리스트에 대한 게시글 수를 조회 -->
+		<where>
+			<!-- 게시글 리스트 요청 : type == null, keywork == null -->
+			<if test="type == 'title'">
+				<!-- 제목으로 검색 -->
+				title LIKE CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="type == writer">
+				<!-- 글쓴이로 검색 -->
+				writer LIKE CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="type == content">
+				<!-- 게시글 내용으로 검색 -->
+				content LIKE CONCAT('%', #{keyword}, '%')
+			</if>
+		</where>
 	</select>
+	
+	
 	
 	<!-- (추가)no에 해당하는 게시글의 읽은 횟수(read_count)를 증가시키는 맵핑구문 -->
 	<update id="incrementReadCount">

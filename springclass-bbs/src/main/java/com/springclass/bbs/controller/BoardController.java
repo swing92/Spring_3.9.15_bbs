@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.springclass.bbs.domain.Board;
 import com.springclass.bbs.service.BoardService;
@@ -53,11 +54,27 @@ public class BoardController {
 	// Controller 메소드에 요청 파라미터 이름과 동일한 이름의 메소드 파라미터를 지정하면 스프링으로부터 요청 파라미터를 넘겨받을 수 있음
 	// 요청 파라미터와 메소드의 파라미터 이름이 다른 경우에는 매소드의 파라미터 앞에 @RequestParam("요청 파라미터 이름")을 써서 지정하면 됨
 	
-	// (수정)게시글 리스트 보기 요청을 처리하는 메소드
-	@RequestMapping(value= {"/boardList", "/list"}, method=RequestMethod.GET)
-	public String BoardList(Model model, @RequestParam(value="pageNum", required=false, defaultValue="1")int pageNum) {
+//	// (수정)게시글 리스트 보기 요청을 처리하는 메소드
+//	@RequestMapping(value= {"/boardList", "/list"}, method=RequestMethod.GET)
+//	public String BoardList(Model model, @RequestParam(value="pageNum", required=false, defaultValue="1")int pageNum) {
+//		// Service 클래스를 이용해 게시글 리스트 가져오기
+//		Map<String, Object> modelMap = boardService.boardList(pageNum);
+//		
+//		// 파라미터로 받은 Model객체에 view로 보낼 모델을 저장
+//		model.addAllAttributes(modelMap);
+//		
+//		// 반환
+//		return "boardList";
+//	}
+	
+	// (수정의 수정)게시글 리스트 보기 요청을 처리하는 메소드(순수 게시글 리스트, 검색 리스트)
+	@RequestMapping(value= {"/boardList", "/list"})
+	public String BoardList(Model model, @RequestParam(value="pageNum", required=false, defaultValue="1")int pageNum,
+										 @RequestParam(value="type", required=false, defaultValue="null")String type,
+										 @RequestParam(value="keyword", required=false, defaultValue="null")String keyword) {
 		// Service 클래스를 이용해 게시글 리스트 가져오기
-		Map<String, Object> modelMap = boardService.boardList(pageNum);
+		// 일반 리스트 요청인지, 검색 요청인지를 체크해서 각가에 맞는 필요데이터를 반환하도록 구현
+		Map<String, Object> modelMap = boardService.boardList(pageNum, type, keyword);
 		
 		// 파라미터로 받은 Model객체에 view로 보낼 모델을 저장
 		model.addAllAttributes(modelMap);
@@ -123,10 +140,12 @@ public class BoardController {
 	
 	// '/update'로 들어오는 GET방식 요청을 처리하는 메소드
 	
-	// 게시글 수정 폼 요청을 처리하는 메소드
+	// 게시글 수정 폼을 요청하는 것을 처리하는 메소드
 	// 파라미터에 HttpServletResponse, PrintWriter와 요청파라미터를 받을 no, pass 지정
 	@RequestMapping(value="/update")
-	public String updateBoard(Model model, HttpServletResponse res, PrintWriter out, int no, String pass) {
+//	public String updateBoard(Model model, HttpServletResponse res, PrintWriter out, int no, String pass) {
+	// (수정)요청 파라미터에 pageNum 추가
+	public String updateBoard(Model model, HttpServletResponse res, PrintWriter out, int no, String pass, @RequestParam(value="pageNum", required=false, defaultValue="1")int pageNum) {
 		// BoardService 클래스를 이용해 게시판 테이블에서 비밀번호가 맞는지 체크
 		boolean result = boardService.isPassCheck(no, pass);
 		
@@ -143,12 +162,18 @@ public class BoardController {
 			// Writer나 OutputStream을 이용해 응답 결과를 직접 작성할 수 있음
 		}
 		
-		// Service 클래스를 이용해 게시글 수정 폼에 출력할 no에 해당하는 게시글 가져오기
+//		// Service 클래스를 이용해 게시글 수정 폼에 출력할 no에 해당하는 게시글 가져오기
+//		Board board = boardService.getBoard(no);
+		
+		// (수정)Service 클래스를 이용해 게시글 수정 폼에 출력할 no에 해당하는 게시글 가져오기
+		// + 두 번째 인수를 false로 지정해서 조회수를 증가시키지 않는다!
 		Board board = boardService.getBoard(no, false);
 		
 		// 파라미터로 받은 모델 객체에 뷰로 보낼 모델 저장
 		// Model에는 도메인 객체(Board)나 비즈니스 로직(Service)을 처리한 결과를 저장
 		model.addAttribute("board", board);
+		// (추가)pageNum도 저장해서 보내자 수정하고 나면 이전 페이지로 돌아와야하잖아
+		model.addAttribute("pageNum", pageNum);
 		
 		// servlet-context.xml의 ViewResolver에서 prefix와 suffix에 지정한 정보를 제외한 뷰 이름을 문자열로 반환
 		// 뷰 이름을 반환하면 포워드 되어 제어가 뷰 페이지로 이동
@@ -156,9 +181,10 @@ public class BoardController {
 	}
 	
 	// '/update'로 들어오는 POST방식의 요청을 처리하는 메소드
-	// 게시글 수정 폼에서 들어오는 게시글 수정 요청을 처리하는 메소드
+	// 게시글 수정 폼'에서' 들어오는 게시글 수정 요청을 처리하는 메소드
 	@RequestMapping(value="/update", method=RequestMethod.POST)
-	public String updateBoard(HttpServletResponse res, PrintWriter out, Board board) {
+//	public String updateBoard(HttpServletResponse res, PrintWriter out, Board board) { 아래처럼 수정
+	public String updateBoard(HttpServletResponse res, PrintWriter out, Board board, RedirectAttributes reAttrs, @RequestParam(value="pageNum", required=false, defaultValue="1")int pageNum) {
 		// BoardService 클래스를 이용해 게시판 테이블에서 비밀번호가 맞는지 체크
 		boolean result = boardService.isPassCheck(board.getNo(), board.getPass());
 		
@@ -176,14 +202,23 @@ public class BoardController {
 		// Service 클래스를 이용해 게시판 테이블에서 게시글 수정
 		boardService.updateBoard(board);
 		
+		// (추가)RedirectAttributes객체를 이용하면 한 번만 사용할 임시 데이터와 지속적으로 사용할 파라미터를 구분해서 지정 가능 : 스프링프레임워크가 지원하는 객체
+		// addAttribute() 메소드를 사용하면 지속적으로 사용할 파라미터로 지정, 주소 뒤에 파라미터로 추가, 페이지를 새로고침해도 주소 뒤에 파라미터로 남음
+		// addFlashAttribute() 메소드를 사용하면 한 번만 사용하는 일회용 파라미터, 주소 뒤에 파라미터로 추가 안됨!
+		// 추가로 파라미터에 한글이 포함되는 경우에는 URLEncoding을 코드로 구현해야 하지만,
+		// web.xml에서 스프링프레임워크가 지원하는 CharacterEncodingFilter를 설정했기 때문에 Filter에 의해 UTF-8로 인코딩 됨
+		reAttrs.addAttribute("pageNum", pageNum);
+		
 		// 클라이언트 요청 처리 후 boardList로 리다이렉트
 		return "redirect:boardList";
 	}
 	
+	
 	// '/delete'나 '/deleteBoard'로 들어오는 GET방식 요청을 처리
 	// method 속성을 생략 >> GET방식 처리
 	@RequestMapping({"/delete","deleteBoard"})
-	public String deleteBoard(HttpServletResponse res, PrintWriter out, int no, String pass) {
+//	public String deleteBoard(HttpServletResponse res, PrintWriter out, int no, String pass) { 아래처럼 수정
+	public String deleteBoard(HttpServletResponse res, PrintWriter out, int no, String pass, RedirectAttributes reAttrs, @RequestParam(value="pageNum", required=false, defaultValue="1")int pageNum) {
 		// BoardService 클래스를 이용해 게시판 테이블에서 비밀번호가 맞는지 체크
 		boolean result = boardService.isPassCheck(no, pass);
 		
@@ -200,6 +235,8 @@ public class BoardController {
 		
 		// BoardService 클래스를 이용해 게시판 테이블에서 no에 해당하는 게시글을 삭제
 		boardService.deleteBoard(no);
+		
+		reAttrs.addAttribute("pageNum", pageNum);
 		
 		return "redirect:boardList";
 	}

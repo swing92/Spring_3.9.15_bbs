@@ -28,11 +28,33 @@
 			</div>
 		</form>
 		
-		<div class="row">
-			<div class="col text-end">
-				<a href="writeForm" class="btn btn-outline-success">글쓰기</a>
+		<!-- 검색 요청 시 아래를 화면에 표시 -->
+		<c:if test="${ searchOption }">
+			<div class="row my-3">
+				<div class="col text-center">
+					"${ keyword }"로 검색한 결과
+				</div>
 			</div>
-		</div>
+			<%-- 추가로 일반 게시글 리스트로 이동할 수 있도록 링크 설정 --%>
+			<div class="row my-3">
+				<div class="col-6">
+					<a href="boardList" class="btn btn-outline-success">리스트</a>
+				</div>
+				<div class="col text-end">
+					<a href="writeForm" class="btn btn-outline-success">글쓰기</a>
+				</div>
+			</div>
+		</c:if>
+		<!-- 검색요청이 아닐 경우 아래를 화면에 표시 -->
+		<c:if test="${ not searchOption }">
+			<div class="row my-3">
+				<div class="col text-end">
+					<a href="writeForm" class="btn btn-outline-success">글쓰기</a>
+				</div>
+			</div>
+		</c:if>
+		
+		
 		<div class="row my-3">
 			<div class="col">
 				<table class="table table-hover">
@@ -47,8 +69,31 @@
 					</thead>
 					<tbody class="text-secondary">
 					
-						<!-- 게시 글이 있는 경우 -->
-						<c:if test="${ not empty boardList }">
+						<!-- 검색 요청이면서 검색된 리스트가 '있는' 경우 -->
+						<c:if test="${ searchOption and not empty boardList }">
+							<c:forEach var="b" items="${ boardList }" varStatus="status">
+								<tr>
+									<td>${ b.no }</td>
+									<td>
+										<a href="boardDetail?no=${b.no}&pageNum=${currentPage}&type=${type}&keyword=${keyword}"
+											class="text-decoration-none link-secondary">${ b.title }</a>
+									</td>
+									<td>${ b.writer }</td>
+									<td>${ b.regDate }</td>
+									<td>${ b.readCount }</td>
+								</tr>
+							</c:forEach>
+						</c:if>
+						
+						<!-- 검색 요청이면서 검색된 리스트가 '없는' 경우 -->
+						<c:if test="${ searchOption and empty boardList }">
+							<tr>
+								<td colspan="5" class="text-center">"${ keyword }"가 포함된 게시글이 존재하지 않습니다.</td>
+							</tr>
+						</c:if>
+												
+						<!-- 일반 게시글 요청이면서 게시글이 '있는' 경우(type, keyword 파라미터 불필요) -->
+						<c:if test="${ not serchOption and not empty boardList }">
 							<c:forEach var="b" items="${ boardList }">
 								<tr>
 									<td>${ b.no }</td>
@@ -60,51 +105,91 @@
 								</tr>
 							</c:forEach>
 						</c:if>
-						
-						<!-- 게시 글이 없는 경우 -->
-						<c:if test="${ empty boardList }">
+						<!-- 일반 게시글 요청이면서 게시글이 없는 경우 -->
+						<c:if test="${ not searchOption and empty boardList }">
 							<tr>
-								<td colspan="5" class="text-center">
-								게시 글이 존재하지 않습니다.
-								</td>
+								<td colspan="5" class="text-center">게시 글이 존재하지 않습니다.</td>
 							</tr>
 						</c:if>
 					</tbody>
 				</table>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col">
-				<nav aria-label="Page navigation">
-					<ul class="pagination justify-content-center">
-						<!-- 현재 페이지 그룹의 시작페이지 > pageGroup : 이전 페이지 그룹이 존재 -->
-						<!-- = 현재 페이지 그룹의 시작페이지에 pageGroup을 마이너스하여 링크를 설정해야 이전 페이지 그룹의 startPage로 이동 가능 -->
-						<c:if test="${ startPage > pageGroup }">
-							<li class="page-item">
-								<a class="page-link" href="boardList?pageNum=${ startPage - pageGroup }">Pre</a>
-							</li>
-						</c:if>
-						
-						<!-- 현재 페이지 그룹의 startPage부터 endPage만큼 반복하면서 현재 페이지와 같은 그룹에 속한 페이지를 출력, 저장 -->
-						<c:forEach var="i" begin="${ startPage }" end="${ endPage }">
-							<c:if test="${ i == currentPage }">
-								<li class="page-item active" ara-current="page"><span class="page-link">${i}</span></li>
+		
+		<!-- 검색 요청이면서 검색된 리스트가 존재할 경우 페이지네이션 -->
+		<c:if test="${ searchOption and not empty boardList }">
+			<div class="row">
+				<div class="col">
+					<nav aria-label="Page navigation">
+						<ul class="pagination justify-content-center">
+							<!-- 현재 페이지 그룹의 시작 페이지 > pageGroup : 이전 페이지 그룹이 존재, 이전페이지 그룹으로 이동하는 링크 필요 -->
+							<c:if test="${ startPage > pageGroup }">
+								<li class="page-item">
+									<a class="page-link" href="boardList?pageNum=${ startPage - pageGroup }&type=${ type }&keyword=${ keyword }">Pre</a>
+								</li>
 							</c:if>
-							<c:if test="${ i != currentPage }">
-								<li class="page-item"><a class="page-link" href="boardList?pageNum=${ i }">${i}</a></li>
+							<!-- 현재 페이지 그룹의 startPage부터 endPage까지 반복하면서 현재 페이지와 같은 그룹에 속한 페이지 출력하고 링크설정 -->
+							<!-- 현재 페이지는 링크설정 X -->
+							<c:forEach var="i" begin="${ startPage }" end="${ endPage }">
+								<c:if test="${ i == currentPage }">
+									<li class="page-item active" aria-current="page">
+										<span class="page-link">${i}</span>
+									</li>
+								</c:if>
+								<c:if test="${ i != currentPage }">
+									<li class="page-item">
+										<a class="page-link" href="boardList?pageNum=${ i }&type=${ type }&keyword=${ keyword }">${i}</a>
+									</li>
+								</c:if>
+							</c:forEach>
+							<!-- 현재 페이지 그룹의 마지막 페이지 < 전체 페이지 : 다음페이지 그룹이 존재, 다음페이지 그룹으로 이동하는 링크 필요 -->
+							<c:if test="${ endPage < pageCount }">
+								<li class="page-item">
+									<a class="page-link" href="boardList?pageNum=${ startPage + pageGroup }&type=${ type }&keyword=${ keyword }">Next</a>
+								</li>
 							</c:if>
-						</c:forEach>
-						
-						<!-- 현재 페이지 그룹의 마지막 페이지 < 전체 페이지 : 다음 페이지 그룹 존재 -->
-						<!-- = 현재 페이지 그룹의 시작페이지에 pageGroup을 플러스하여 링크를 설정해야 다음 페이지 그룹의 startPage로 이동 가능 -->
-						<c:if test="${ endPage < pageCount }">
-							<li class="page-item">
-								<a class="page-link" href="boardList?pageNum=${ startPage + pageGroup }">Next</a>
-							</li>
-						</c:if>
-					</ul>
-				</nav>
+						</ul>
+					</nav>
+				</div>
 			</div>
-		</div>
+		</c:if>
+		
+		<!-- 일반 게시글 요청이면서 검색된 리스트가 존재할 경우 페이지네이션 -->
+		<c:if test="${ not searchOption and not empty boardList }">
+			<div class="row">
+				<div class="col">
+					<nav aria-label="Page navigation">
+						<ul class="pagination justify-content-center">
+							<!-- 현재 페이지 그룹의 시작페이지 > pageGroup : 이전 페이지 그룹이 존재 -->
+							<!-- = 현재 페이지 그룹의 시작페이지에 pageGroup을 마이너스하여 링크를 설정해야 이전 페이지 그룹의 startPage로 이동 가능 -->
+							<c:if test="${ startPage > pageGroup }">
+								<li class="page-item">
+									<a class="page-link" href="boardList?pageNum=${ startPage - pageGroup }">Pre</a>
+								</li>
+							</c:if>
+							
+							<!-- 현재 페이지 그룹의 startPage부터 endPage만큼 반복하면서 현재 페이지와 같은 그룹에 속한 페이지를 출력, 링크 설정 -->
+							<!-- 현재 페이지는 링크설정 X -->
+							<c:forEach var="i" begin="${ startPage }" end="${ endPage }">
+								<c:if test="${ i == currentPage }">
+									<li class="page-item active" aria-current="page"><span class="page-link">${i}</span></li>
+								</c:if>
+								<c:if test="${ i != currentPage }">
+									<li class="page-item"><a class="page-link" href="boardList?pageNum=${ i }">${i}</a></li>
+								</c:if>
+							</c:forEach>
+							
+							<!-- 현재 페이지 그룹의 마지막 페이지 < 전체 페이지 : 다음 페이지 그룹 존재 -->
+							<!-- = 현재 페이지 그룹의 시작페이지에 pageGroup을 플러스하여 링크를 설정해야 다음 페이지 그룹의 startPage로 이동 가능 -->
+							<c:if test="${ endPage < pageCount }">
+								<li class="page-item">
+									<a class="page-link" href="boardList?pageNum=${ startPage + pageGroup }">Next</a>
+								</li>
+							</c:if>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</c:if>
 	</div>
 </div>
